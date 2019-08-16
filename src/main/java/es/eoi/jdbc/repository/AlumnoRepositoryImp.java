@@ -43,8 +43,30 @@ public class AlumnoRepositoryImp implements AlumnoRepository {
 		conexion.close();
 	}
 
-	public Alumno findByDni(String dni) {
-		return null;
+	public Alumno findByDni(String dni) throws SQLException {
+		Connection cx = openConnection();
+		Statement st = statConnection(cx);
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT * ");
+		sql.append("FROM ALUMNO ");
+		sql.append("WHERE DNI=");
+		sql.append(dni.toString());
+
+		PreparedStatement pst = cx.prepareStatement(sql.toString());
+
+		ResultSet rs = resultConnection(pst.executeQuery(), st);
+
+		Alumno alumno = null;
+
+		while (rs.next()) {
+			alumno = new Alumno(rs.getString("DNI"), rs.getString("NOMBRE"), rs.getString("APELLIDOS"),
+					rs.getInt("EDAD"));
+		}
+
+		closeConnection(cx);
+
+		return alumno;
 	}
 
 	public List<Alumno> findAll() throws SQLException {
@@ -97,13 +119,50 @@ public class AlumnoRepositoryImp implements AlumnoRepository {
 		}
 	}
 
-	public boolean delete(String dni) {
-		return false;
+	public boolean delete(String dni) throws SQLException {
+		try {
+			Connection cx = openConnection();
+
+			StringBuilder sql = new StringBuilder();
+			sql.append("DELETE FROM ALUMNO ");
+			sql.append("WHERE DNI = ?");
+
+			PreparedStatement pst = cx.prepareStatement(sql.toString());
+			pst.setString(1, dni);
+
+			pst.executeUpdate();
+
+			closeConnection(cx);
+
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 
-	public boolean update(String dni, String nombre, String apellidos) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(String dni, String nombre, String apellidos) throws SQLException {
+		try {
+			Connection cx = openConnection();
+
+			StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE ALUMNO ");
+			sql.append("SET DNI=?, NOMBRE=?, APELLIDOS=?");
+			sql.append("WHERE DNI=?");
+
+			PreparedStatement pst = cx.prepareStatement(sql.toString());
+			pst.setString(1, dni);
+			pst.setString(2, nombre);
+			pst.setString(3, apellidos);
+			pst.setString(4, dni);
+
+			pst.executeUpdate();
+
+			closeConnection(cx);
+
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 
 }

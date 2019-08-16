@@ -6,17 +6,16 @@ import java.util.List;
 import es.eoi.jdbc.entity.Alumno;
 import es.eoi.jdbc.repository.AlumnoRepositoryImp;
 
-public class AlumnoServiceImp implements AlumnoService{
-	
+public class AlumnoServiceImp implements AlumnoService {
+
 	private AlumnoRepositoryImp myRepository;
-	
+
 	public AlumnoServiceImp() {
 		this.myRepository = new AlumnoRepositoryImp();
 	}
 
-	public Alumno findByDni(String dni) {
-		// TODO Auto-generated method stub
-		return null;
+	public Alumno findByDni(String dni) throws SQLException {
+		return this.myRepository.findByDni(dni);
 	}
 
 	public List<Alumno> findAll() throws SQLException {
@@ -27,16 +26,12 @@ public class AlumnoServiceImp implements AlumnoService{
 		return this.myRepository.create(alumno);
 	}
 
-	public boolean delete(String dni) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean delete(String dni) throws SQLException {
+		return this.myRepository.delete(dni);
 	}
 
-	public boolean update(String dni, String nombre, String apellidos) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(String dni, String nombre, String apellidos) throws SQLException {
+		return this.myRepository.update(dni, nombre, apellidos);
 	}
 
-	
-	
 }
